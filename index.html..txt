@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Document Chatbot</title>
+    <style>
+        #chatbot {
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+        }
+        #user-input {
+            width: calc(100% - 80px);
+            padding: 10px;
+            margin: 10px 0;
+        }
+        #send-button {
+            padding: 10px;
+            cursor: pointer;
+        }
+        #response {
+            margin: 20px 0;
+            white-space: pre-wrap;
+        }
+    </style>
+</head>
+<body>
+    <div id="chatbot">
+        <input type="text" id="user-input" placeholder="Ask a question...">
+        <button id="send-button" onclick="sendQuery()">Send</button>
+        <div id="response"></div>
+    </div>
+
+    <script>
+        async function sendQuery() {
+            const query = document.getElementById('user-input').value;
+            const responseElement = document.getElementById('response');
+            responseElement.innerText = 'Loading...';
+
+            const response = await fetch('/chat', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ query: query })
+            });
+
+            const data = await response.json();
+            responseElement.innerText = data.response;
+        }
+    </script>
+</body>
+</html>
