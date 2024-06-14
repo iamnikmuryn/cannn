@@ -7,6 +7,10 @@ es = Elasticsearch(
     basic_auth=('elastic', 'jblfmfZpwzgIMyzhCdSnmjBb')  # Replace with your actual credentials
 )
 
+@app.route('/')
+def home():
+    return "Welcome to the CANNN Bot App!"
+
 @app.route('/webhook', methods=['POST'])
 def webhook():
     req = request.get_json(silent=True, force=True)
