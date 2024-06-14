@@ -1,5 +1,5 @@
-Flash
+Flash==2.0.1
 google-cloud-storage
 google-cloud-vision
 elasticsearch
-gunicorn
+gunicorn==20.0.4
