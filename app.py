@@ -4,7 +4,7 @@ from elasticsearch import Elasticsearch
 app = Flask(__name__)
 es = Elasticsearch(
     cloud_id='My_deployment:bm9ydGhhbWVyaWNhLW5vcnRoZWFzdDEuZ2NwLmVsYXN0aWMtY2xvdWQuY29tOjQ0MyRjMjkxNDkzZmFjYWI0NWQ3OTcyMDkyYmEyN2VlMmFhNiQ5ZjFlZTE1MDYxMTk0Y2I3OGNlODBiYmE1ODE4N2EyYQ==',
-    api_key=("Ju4eFZABuYscoD2RDIUg", "3a4IYKinTnegs1wj6lScYA")
+    api_key='SnU0ZUZaQUJ1WXNjb0QyUkRJVWc6M2E0SVlLaW5UbmVnczF3ajZsU2NZQQ=='  # Replace with your actual encoded API key
 )
 
 @app.route('/')
