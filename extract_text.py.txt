@@ -1,0 +1,55 @@
+import os
+from google.cloud import storage, vision
+import io
+from elasticsearch import Elasticsearch
+
+def extract_text_from_pdf(bucket_name, source_blob_name):
+    try:
+        print(f"Starting text extraction from {source_blob_name}")
+        client = vision.ImageAnnotatorClient()
+        storage_client = storage.Client()
+        bucket = storage_client.bucket(bucket_name)
+        blob = bucket.blob(source_blob_name)
+
+        pdf_content = blob.download_as_bytes()
+        image = vision.Image(content=pdf_content)
+
+        response = client.document_text_detection(image=image)
+        texts = response.text_annotations
+        return texts[0].description if texts else ""
+    except Exception as e:
+        print(f"Error processing {source_blob_name}: {e}")
+        return ""
+
+def extract_and_index_documents(bucket_name, document_list, es_client):
+    for document in document_list:
+        print(f"Processing document: {document}")
+        text = extract_text_from_pdf(bucket_name, document)
+        if text:
+            print(f"Extracted text for {document}: {text[:100]}...")  # Print the first 100 characters of the text
+            es_client.index(index='documents', id=document, body={'text': text})
+            print(f"Indexed document: {document}")
+        else:
+            print(f"No text extracted for {document}")
+
+if __name__ == "__main__":
+    try:
+        print("Starting the script...")
+        os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = "C:\\Users\\Nik Muryn\\Desktop\\cannn-chat-bot-0500ac6a1487.json"
+        print(f"Google application credentials set: {os.environ['GOOGLE_APPLICATION_CREDENTIALS']}")
+
+        bucket_name = 'your-bucket-name'
+        document_list = ['document1.pdf', 'document2.pdf']  # Add your document names here
+        
+        print("Connecting to Elasticsearch...")
+        es = Elasticsearch(
+            cloud_id='your_cloud_id',
+            basic_auth=('username', 'password')
+        )
+        print("Connected to Elasticsearch.")
+
+        print("Starting document extraction and indexing...")
+        extract_and_index_documents(bucket_name, document_list, es)
+        print("Process completed.")
+    except Exception as e:
+        print(f"An error occurred: {e}")
