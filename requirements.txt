@@ -2,3 +2,4 @@ Flash
 google-cloud-storage
 google-cloud-vision
 elasticsearch
+gunicorn
